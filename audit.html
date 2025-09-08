@@ -5,18 +5,20 @@
         <body>
     <div id="output"></div>
     <script>
-        const sheetId = '12chQQ0bWIsEDQBxsRLTrrS4-w18JWfeSuM9b9FOpzzg'
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
         const url = `https://docs.google.com/spreadsheets/d/${12chQQ0bWIsEDQBxsRLTrrS4-w18JWfeSuM9b9FOpzzg}/gviz/tq?tqx=out:json`;
 
         fetch(url)
         .then(res => res.text())
     .then(data => {
         const jsonData = JSON.parse(data.substring(47, data.length -2));
-        const cols = jsonData.table.cols.map(c => c.lable);
+        const cols = jsonData.table.cols.map(c => c.label);
 
         const rows = jsonData.table.rows;
         let html = '<table border="1"><thead><tr>';
-        cols.forEach(col => html += `<th>${col}</th>`;
+        cols.forEach(col => {
+            html += `<th>${col}</th>`;
+        });
        
         html += '</tr></thead><tbody>';
 
@@ -31,6 +33,10 @@
             html += '</tbody></table>';
         
             document.getElementById('output').innerHTML = html;
+          })
+          .catch(error => {
+            console.error('Error', error);
+            document.getElementById('output').innerText = 'Failed.';
           });
         </script>
         </body>
