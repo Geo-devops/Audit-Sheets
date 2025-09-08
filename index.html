@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audit</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Data</h2>
+  <div id="output">Loading data...</div>
+
+  <script>
+    fetch('http://localhost:3000/proxy-data')
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) {
+          document.getElementById('output').innerHTML = 'Data format error.';
+          return;
+        }
+
+      
+        let html = '<table><thead><tr>';
+        const headers = ["Job ID", "Job Title", "Company", "Job URL", "Description", "DS Output"];
+        headers.forEach(header => {
+          html += `<th>${header}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+
+        data.forEach(row => {
+          html += '<tr>';
+          headers.forEach(key => {
+            html += `<td>${row[key] || ''}</td>`;
+          });
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        document.getElementById('output').innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        document.getElementById('output').innerHTML = 'Failed to load data.';
+      });
+  </script>
+</body>
+</html>
